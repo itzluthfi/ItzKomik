@@ -1,0 +1,42 @@
+# ── Frontend (React Native / Expo) ────────────────────────────────────────
+frontend/node_modules/
+frontend/.expo/
+frontend/dist/
+frontend/web-build/
+frontend/expo-env.d.ts
+frontend/.env.local
+frontend/.env*.local
+
+# Native build output
+frontend/.kotlin/
+frontend/*.orig.*
+frontend/*.jks
+frontend/*.p8
+frontend/*.p12
+frontend/*.key
+frontend/*.mobileprovision
+frontend/ios/
+frontend/android/
+
+# Metro
+frontend/.metro-health-check*
+
+# ── Backend (Laravel) ──────────────────────────────────────────────────────
+backend/vendor/
+backend/.env
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/bootstrap/cache/*
+backend/public/hot
+backend/public/storage
+
+# ── Shared / OS ────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.pem
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.tsbuildinfo
