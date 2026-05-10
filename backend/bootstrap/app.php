@@ -18,8 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // CORS — wajib ada sebelum auth agar preflight OPTIONS request bisa dibalas
         $middleware->prepend(\Illuminate\Http\Middleware\HandleCors::class);
 
-        // Stateless API — tidak pakai session/cookie untuk auth
-        $middleware->statefulApi();
+        // Stateless API — Mobile app menggunakan Bearer Token, tidak butuh statefulApi/session
+        // $middleware->statefulApi();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Kembalikan JSON untuk error autentikasi (bukan redirect ke login page)

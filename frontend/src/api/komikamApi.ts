@@ -51,6 +51,7 @@ async function request<T>(
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
     Accept: "application/json",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36",
   };
 
   if (requireAuth) {
@@ -70,6 +71,13 @@ async function request<T>(
   if (!res.ok) {
     const msg: string =
       (json as { message?: string }).message ?? `HTTP ${res.status}`;
+    
+    // LOG DEBUG: Cetak detail error ke terminal untuk analisa
+    console.log(`[API ERROR] ${method} ${path} -> Status: ${res.status}, Message: ${msg}`);
+    if (res.status === 403) {
+      console.log("[DEBUG 403] Isi response body:", JSON.stringify(json));
+    }
+
     throw new KomikamApiError(res.status, msg);
   }
 
