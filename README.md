@@ -44,6 +44,29 @@ EXPO_PUBLIC_KOMIKAM_API_URL=http://192.168.1.xxx:8000
 ```
 *(Ingat untuk me-restart Expo server `npx expo start` setelah mengubah file `.env.local`)*
 
+### Build Release (APK)
+
+Jika Anda ingin membuat file APK untuk diinstal di HP Android secara permanen, ikuti langkah-langkah berikut:
+
+1. **Pindahkan Folder Project ke Path Pendek (Wajib di Windows)**
+   Agar terhindar dari error *Path Too Long*, pindahkan folder `ItzKomik` ke lokasi yang sangat pendek, contohnya: `C:\ItzKomik`.
+
+2. **Generate Folder Native**
+   Jalankan perintah ini di dalam folder `frontend/`:
+   ```bash
+   npx expo prebuild
+   ```
+
+3. **Build APK menggunakan Gradle**
+   ```bash
+   cd android
+   ./gradlew assembleRelease
+   ```
+
+4. **Ambil File APK**
+   File APK hasil build akan tersedia di:
+   `frontend/android/app/build/outputs/apk/release/app-release.apk`
+
 ---
 
 ## 2. Backend (`/backend`)
