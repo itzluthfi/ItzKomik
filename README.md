@@ -48,22 +48,27 @@ EXPO_PUBLIC_KOMIKAM_API_URL=http://192.168.1.xxx:8000
 
 Jika Anda ingin membuat file APK untuk diinstal di HP Android secara permanen, ikuti langkah-langkah berikut:
 
-1. **Pindahkan Folder Project ke Path Pendek (Wajib di Windows)**
-   Agar terhindar dari error *Path Too Long*, pindahkan folder `ItzKomik` ke lokasi yang sangat pendek, contohnya: `C:\ItzKomik`.
+1. **Ganti Logo Aplikasi (Opsional)**
+   Jika ingin mengganti logo, ganti file gambar berikut di folder `frontend/assets/images/`:
+   - `icon.png` (Logo utama)
+   - `android-icon-foreground.png` (Logo depan Adaptive Icon)
 
-2. **Generate Folder Native**
-   Jalankan perintah ini di dalam folder `frontend/`:
+2. **Pindahkan Folder Project ke Path Pendek (Wajib di Windows)**
+   Agar terhindar dari error *Path Too Long* saat kompilasi Gradle, pindahkan folder `ItzKomik` ke lokasi yang sangat pendek, contohnya: `C:\ItzKomik`.
+
+3. **Generate & Sync Folder Native**
+   Jalankan perintah ini di dalam folder `frontend/`. Gunakan flag `--clean` jika Anda baru saja mengganti icon agar folder `android` terupdate sempurna:
    ```bash
-   npx expo prebuild
+   npx expo prebuild --clean
    ```
 
-3. **Build APK menggunakan Gradle**
+4. **Build APK menggunakan Gradle**
    ```bash
    cd android
    ./gradlew assembleRelease
    ```
 
-4. **Ambil File APK**
+5. **Ambil File APK**
    File APK hasil build akan tersedia di:
    `frontend/android/app/build/outputs/apk/release/app-release.apk`
 
