@@ -126,8 +126,8 @@ function PageImage({
         <Animated.View style={{ width: imgW, height, transform: [{ scale }] }}>
           <ExpoImage
             source={{ uri }}
-            style={{ width: imgW, height }}
-            contentFit="contain"
+            style={{ width: "100%", height: "100%" }}
+            contentFit="cover"
             cachePolicy="disk"
             transition={0}
             allowDownscaling={false}
@@ -168,8 +168,8 @@ export default function ReaderScreen() {
   );
 
   const { width: screenWidth } = useWindowDimensions();
-  const isDesktop = screenWidth >= 720;
-  const contentWidth = isDesktop ? Math.min(720, screenWidth * 0.75) : screenWidth;
+  const isDesktop = screenWidth >= 1024; // Naikkan threshold ke 1024 agar tidak kena di HP high-res
+  const contentWidth = isDesktop ? Math.min(800, screenWidth * 0.8) : screenWidth;
 
   const [fetchedMangaTitle, setFetchedMangaTitle] = React.useState<string | null>(null);
   const [fetchedCoverUrl, setFetchedCoverUrl] = React.useState<string | null>(null);

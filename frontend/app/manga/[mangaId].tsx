@@ -99,6 +99,7 @@ export default function MangaDetailScreen() {
   const [offline, setOffline] = React.useState(false);
   const [readChapters, setReadChapters] = React.useState<string[]>([]);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [firstChapter, setFirstChapter] = React.useState<ShngmChapter | null>(null);
 
   const shimmer = React.useRef(new Animated.Value(0)).current;
   const SHIMMER_WIDTH = 140;
@@ -228,11 +229,19 @@ export default function MangaDetailScreen() {
     try {
       setState((s) => ({ ...s, loading: true, error: null }));
 
-      const [detailRes, chapterRes] = await Promise.all([
+      // Ambil detail, chapter terbaru (page 1), dan cari chapter pertama (sort asc)
+      const [detailRes, chapterRes, firstChRes] = await Promise.all([
         getMangaDetail(id),
-        getChapterList({ mangaId: id, page: 1, pageSize: 20 }),
+        getChapterList({ mangaId: id, page: 1, pageSize: 20, sortOrder: sortDir }),
+        // Gunakan getChapterList yang sudah ada untuk ambil chapter paling awal
+        getChapterList({ mangaId: id, page: 1, pageSize: 1, sortOrder: "asc" }).catch(() => null)
       ]);
+
       const manga: ShngmManga = detailRes.data;
+      if (firstChRes && firstChRes.retcode === 0 && firstChRes.data.length > 0) {
+        setFirstChapter(firstChRes.data[0]);
+      }
+
       setState((s) => ({
         ...s,
         manga,
@@ -278,6 +287,7 @@ export default function MangaDetailScreen() {
         mangaId: id,
         page: nextPage,
         pageSize: 20,
+        sortOrder: sortDir,
       });
 
       setState((s) => {
@@ -1210,20 +1220,13 @@ export default function MangaDetailScreen() {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <Pressable
             onPress={() => {
-              if (state.chapters.length === 0) return;
-              let minNum = Infinity;
-              let firstChapterId = state.chapters[0].chapter_id;
-              for (const ch of state.chapters) {
-                const num = typeof ch.chapter_number === "number" ? ch.chapter_number : 0;
-                if (num < minNum) {
-                  minNum = num;
-                  firstChapterId = ch.chapter_id;
-                }
-              }
+              const target = firstChapter ?? (state.chapters.length > 0 ? state.chapters[state.chapters.length - 1] : null);
+              if (!target) return;
+
               router.push({
                 pathname: "/reader/[chapterId]",
                 params: {
-                  chapterId: firstChapterId,
+                  chapterId: target.chapter_id,
                   mangaTitle: displayTitle,
                   coverUrl: displayCover,
                 },
@@ -1275,7 +1278,7 @@ export default function MangaDetailScreen() {
           <Pressable
             onPress={() => {
               setSortDir((v) => (v === "desc" ? "asc" : "desc"));
-              listRef.current?.scrollToOffset({ offset: 0, animated: false });
+              // list akan ter-refresh otomatis via useEffect sortDir
             }}
             style={{
               paddingVertical: 6,
@@ -1521,7 +1524,12 @@ export default function MangaDetailScreen() {
         )}
       />
       {resumeCta && (
-        <View style={{ position: "absolute", left: 12, right: 12, bottom: 12 }}>
+        <View style={{ 
+          position: "absolute", 
+          left: 12, 
+          right: 12, 
+          bottom: insets.bottom > 0 ? insets.bottom + 4 : 12 
+        }}>
           {resumeCta}
         </View>
       )}

@@ -259,14 +259,16 @@ export async function getChapterList(input: {
   mangaId: string;
   page?: number;
   pageSize?: number;
+  sortOrder?: "asc" | "desc";
   cacheMode?: FetchOptions["cacheMode"];
 }): Promise<ShngmChapterListResponse> {
   const page = input.page ?? 1;
   const pageSize = input.pageSize ?? 10;
+  const sortOrder = input.sortOrder ?? "desc";
 
   const url =
     `${BASE_URL}/v1/chapter/${encodeURIComponent(input.mangaId)}/list` +
-    toQuery({ page, page_size: pageSize });
+    toQuery({ page, page_size: pageSize, sort_order: sortOrder });
   const json = await fetchJson<ShngmChapterListResponse>(url, {
     cacheTtlMs: CHAPTER_CACHE_TTL_MS,
     cacheMode: input.cacheMode,
